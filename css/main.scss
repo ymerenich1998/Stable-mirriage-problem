@@ -1,0 +1,55 @@
+$primary-color: #cfffea;
+$secondary-color: #afffe1;
+$accent-color: #bcc7ff;
+
+$boys: #9ad1ff;
+$girls: #ffc8f4;
+
+$nav-color: #212121;
+
+@mixin shadow($hl: 4px, $vl: 4px, $blur: 10px, $color: $nav-color, $op: 0.66){
+  -webkit-box-shadow: $hl $vl $blur rgba($color, $op);
+     -moz-box-shadow: $hl $vl $blur rgba($color, $op);
+          box-shadow: $hl $vl $blur rgba($color, $op);
+}
+
+*{
+
+}
+
+body{
+  max-width: 1920px;
+  margin: auto!important;
+  padding-bottom: 20px;
+}
+
+#setup_controls, .type_list, #results, #verbose_results{
+  @include shadow();
+  margin-top: 50px;
+  text-align: center;
+  padding-bottom: 5px;
+  h2{
+    text-align: center;
+    background-color: $accent-color;
+    padding: 20px;
+    margin-bottom: 10px;
+    &.typeA{
+      background-color: $boys;
+    }
+    &.typeB{
+      background-color: $girls;
+    }
+  }
+}
+
+.btn-function{
+  background-color: $primary-color;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: bold;
+  color: $nav-color;
+}
+
+#match_controls{
+  text-align: center;
+}
