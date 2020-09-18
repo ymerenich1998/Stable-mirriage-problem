@@ -1,5 +1,6 @@
 (function () {
 
+//Визначаю глобальний простір імен
 var GS;
 if (typeof GS === "undefined") {
   GS = {};
@@ -9,6 +10,7 @@ if (typeof GS === "undefined") {
   throw new Error("GS вже існує як об'єкт.");
 }
 
+//Налаштування прототипного успадкування
 Object.prototype.beget = function () {
   function F() {}
   F.prototype = this;
@@ -144,6 +146,7 @@ GS.match = function (typeAs, typeBs, verbose) {
   }
 };
 
+// Генерую html-структуру
 GS.Dom = {
   match: function () {
     var results = document.getElementById('results');
