@@ -17,6 +17,8 @@ Object.prototype.beget = function () {
   return new F();
 };
 
+
+
 Object.prototype.create = function (data) {
   // створюю новий об'єкт на цьому об'єкті
   function F() {}
