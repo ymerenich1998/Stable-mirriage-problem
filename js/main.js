@@ -106,7 +106,7 @@ GS.match = function (typeAs, typeBs, verbose) {
           var B = typeBs[b];
           if (verbose) GS.print(A + ' віддає перевагу ' + B, verboseResults);
           // якщо b не має збігу, тоді пару a і b
-          if (typeBs[b].matchedTo == undefined) {
+          if (typeBs[b].matchedTo === undefined) {
             if (verbose) GS.print(B + ' не має собі рівних ', verboseResults);
             typeAs[a].matchedTo = b;
             typeBs[b].matchedTo = a;
@@ -168,14 +168,18 @@ GS.Dom = {
       boySelects = GS.Dom.getElementsByClassName(typeA + '_rank', document.getElementById(typeA + '_' + i));
       var ranking = [];
       for (var j = 0; j < boySelects.length; j++) {
-        ranking.push(boySelects[j].selectedIndex);
+        if (boySelects[j].selectedIndex != '-1') {
+         ranking.push(boySelects[j].selectedIndex);
+       }
       }
       boyName = document.getElementById(typeA + '_name_' + i).value;
       typeAs.push(GS.TypeA.create({ranking: ranking, name: boyName}));
       girlSelects = GS.Dom.getElementsByClassName(typeB + '_rank', document.getElementById(typeB + '_' + i));
       var ranking = [];
       for (var j = 0; j < girlSelects.length; j++) {
-        ranking.push(girlSelects[j].selectedIndex);
+        if (girlSelects[j].selectedIndex != '-1') {
+          ranking.push(girlSelects[j].selectedIndex);
+        }
       }
       girlName = document.getElementById(typeB + '_name_' + i).value;
       typeBs.push(GS.TypeB.create({ranking: ranking, name: girlName}));
@@ -349,6 +353,10 @@ GS.Dom = {
     type.appendChild(name);
     for (var rank = 0; rank < n; rank++) {
       var select = document.createElement('select');
+      var option = document.createElement('option');
+      option.setAttribute('value',  "-1");
+      option.text = "";
+      select.add(option, undefined);
       for (var choice = 0; choice < n; choice++) {
         var option = document.createElement('option');
         option.setAttribute('value', choice);
