@@ -53,3 +53,34 @@ body{
 #match_controls{
   text-align: center;
 }
+
+.man{
+  color: $boys;
+  font-weight: 500;
+}
+
+.woman{
+  color: $girls;
+  font-weight: 500;
+}
+
+label{
+  font-size: 18px;
+}
+
+input:not([type="button"]), select{
+  padding: 5px 10px;
+  border: 1px solid $accent-color;
+  color: rgba($nav-color, .9);
+  &:focus{
+    border: 1px solid $accent-color;
+    outline: none;
+    box-shadow: 1px 1px 10px rgba($accent-color, .6);
+  }
+}
+
+#results{
+  p{
+    font-size: 20px;
+  }
+}

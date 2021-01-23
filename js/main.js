@@ -62,7 +62,7 @@ GS.lineNumber = 1;
 
 GS.print = function (str, parent) {
   var textElem = document.createElement('p');
-  textElem.appendChild(document.createTextNode(GS.lineNumber++ + ': ' + str));
+  textElem.innerHTML = "<b>" + GS.lineNumber++ + "</b>" + ': ' + str;
   parent.appendChild(textElem);
 };
 
@@ -71,7 +71,7 @@ GS.print = function (str, parent) {
  */
 GS.printPairs = function (typeAs, typeBs, parent) {
   for (var a = 0; a < typeAs.length; a++) {
-    GS.print(typeAs[a].name + ' в парі з ' + typeBs[typeAs[a].matchedTo].name, parent);
+    GS.print( ' <span class="man">' + typeAs[a].name + '</span>' + ' в парі з ' + ' <span class="woman">' + typeBs[typeAs[a].matchedTo].name + '</span>', parent);
   }
 }
 
@@ -92,6 +92,7 @@ GS.totalUnmatched = function (typeAs) {
  * Алгоритм Гейла-Шеплі для стабільного узгодження.
  */
 GS.match = function (typeAs, typeBs, verbose) {
+  GS.lineNumber = 1;
   var round = 1;
   var verboseResults = document.getElementById('verbose_results');
   while (GS.totalUnmatched(typeAs) > 0 && round <= 50) {
@@ -122,8 +123,8 @@ GS.match = function (typeAs, typeBs, verbose) {
             var a_ = typeBs[b].matchedTo;
             var A_ = typeAs[a_];
             if (verbose) GS.print(B + ' вже в парі з ' + A_, verboseResults);
-            if (verbose) GS.print(B + ' пріоритет ' + A_ + ' як ' + typeBs[b].ranking.indexOf(a_), verboseResults);
-            if (verbose) GS.print(B + ' пріоритет ' + A + ' як ' + typeBs[b].ranking.indexOf(a), verboseResults);
+            if (verbose) GS.print(B + ' пріоритет ' + A_ + ' як ' + (typeBs[b].ranking.indexOf(a_)+1), verboseResults);
+            if (verbose) GS.print(B + ' пріоритет ' + A + ' як ' + (typeBs[b].ranking.indexOf(a)+1), verboseResults);
             // якщо поточна пара b (a_) стоїть на b вище, ніж a, тоді a слід шукати іншу пару
             if (typeBs[b].ranking.indexOf(a_) < typeBs[b].ranking.indexOf(a)) {
               // більше не запитувати цей тип B.
@@ -225,14 +226,14 @@ GS.Dom = {
     var generated = document.createElement('div');
     generated.setAttribute('id', 'generated');
     var typeAs = document.createElement('div');
-    typeAs.setAttribute('id', typeA + 's');
+    typeAs.setAttribute('id', typeA);
     typeAs.setAttribute('class', 'type_list mb-3');
     var typeAsHeader = document.createElement('h2');
     typeAsHeader.appendChild(document.createTextNode(typeA));
     typeAsHeader.setAttribute('class', 'gender-title typeA');
     typeAs.appendChild(typeAsHeader);
     var typeBs = document.createElement('div');
-    typeBs.setAttribute('id', typeB + 's');
+    typeBs.setAttribute('id', typeB);
     typeBs.setAttribute('class', 'type_list mb-3');
     var typeBsHeader = document.createElement('h2');
     typeBsHeader.appendChild(document.createTextNode(typeB));
@@ -339,17 +340,21 @@ GS.Dom = {
     var typeA = GS.globals.typeA;
     var typeB = GS.globals.typeB;
     var type = document.createElement('div');
-    type.setAttribute('className', 'type');
+    type.setAttribute('class', 'd-block my-3');
     isTypeA ? type.setAttribute('id', typeA + '_' + number) : type.setAttribute('id', typeB + '_' + number);
     var name = document.createElement('input');
     name.setAttribute('type', 'text');
+    name.setAttribute('class', 'd-block mx-auto mb-2');
     isTypeA ? name.setAttribute('id', typeA + '_name_' + number) : name.setAttribute('id', typeB + '_name_' + number);
     isTypeA ? name.setAttribute('value', typeA + number) : name.setAttribute('value', typeB + number);
     name.addEventListener('change', GS.Dom.updateName, false);
+    var label = document.createElement('label');
+    label.setAttribute('class', 'title_punkt');
+    isTypeA ? label.innerHTML = "Виберіть приорітет для " + "<B>Хлопця " + (number+1)+"</b>" : label.innerHTML = "Виберіть приорітет для " + "<B>Дівчини " + (number+1)+"</b>";
+    type.appendChild(label);
     type.appendChild(name);
     for (var rank = 0; rank < n; rank++) {
       var select = document.createElement('select');
-      
       for (var choice = 0; choice < n; choice++) {
         var option = document.createElement('option');
         option.setAttribute('value', choice);
@@ -358,9 +363,13 @@ GS.Dom = {
       }
       number + rank >= n ? select.selectedIndex = number + rank - n : select.selectedIndex = number + rank;
       isTypeA ? select.setAttribute('id', typeA + number + '_rank_' + rank) : select.setAttribute('id', typeB + '_' + number + '_rank_' + rank);
-      isTypeA ? select.setAttribute('class', typeA + '_rank ' + typeA + '_rank_' + rank) : select.setAttribute('class', typeB + '_rank ' + typeB + '_rank_' + rank);
+      isTypeA ? select.setAttribute('class', typeA + '_rank ' + typeA + '_rank_' + rank + " mx-3") : select.setAttribute('class', typeB + '_rank ' + typeB + '_rank_' + rank + " mx-3");
       select.addEventListener('change', GS.Dom.update, false);
       select.addEventListener('focus', GS.Dom.last, false);
+      var label2 = document.createElement('label');
+      isTypeA ? label2.setAttribute('for', typeA + '_rank_' + rank) : label2.setAttribute('for', '#' + typeB + '_rank_' + rank);
+      label2.innerHTML = "<b>" + (rank+1) + "</b>";
+      type.appendChild(label2);
       type.appendChild(select);
     }
     parent.appendChild(type);
